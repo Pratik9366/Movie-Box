@@ -1,45 +1,69 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import React from "react";
+import { Tabs } from "expo-router";
+import { images } from "@/constants/images";
+import { icons } from "@/constants/icons";
+import CustomTabBarButton from "@/app/components/CustomTabBarButton";
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
+const _Layout = () => {
+  // * It is for bottom screen tab navigations * * * * * *
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          backgroundColor: "#0f0D23",
+          position: "absolute",
+          marginHorizontal: 20,
+          height: 48,
+          borderRadius: 50,
+          bottom: 45,
+          elevation: 5,
+          borderColor: "no"
+        },
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: "Home",
+          headerShown: false,
+          tabBarButton: (props) => {     
+            return <CustomTabBarButton {...props} icon={icons.home} label='Home' highlight={images.highlight} />;
+          },
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="search"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: "Search",
+          headerShown: false,
+          tabBarButton: (props) => {
+            return <CustomTabBarButton {...props} icon={icons.search} label='Search' highlight={images.highlight} />;
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="saved"
+        options={{
+          title: "Saved",
+          headerShown: false,
+          tabBarButton: (props) => {
+            return <CustomTabBarButton {...props} icon={icons.save} label='Save' highlight={images.highlight} />;
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          headerShown: false,
+          tabBarButton: (props) => {
+            return <CustomTabBarButton {...props} icon={icons.person} label='Profile' highlight={images.highlight} />;
+          },
         }}
       />
     </Tabs>
   );
-}
+};
+
+export default _Layout;
