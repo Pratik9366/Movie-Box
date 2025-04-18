@@ -15,7 +15,7 @@ import { icons } from "@/constants/icons";
 import SearchBar from "../components/SearchBar";
 import { router } from "expo-router";
 import useFetch from "@/services/useFetch";
-import { fetchMovies, fetchTrendingMovies } from "@/services/api";
+import { fetchActionMovies, fetchHorrorMovies, fetchMovies, fetchTrendingMovies } from "@/services/api";
 import MovieCard from "../components/MovieCard";
 import TrendingCard from "../components/TrendingCard";
 import { getLastViewMovies } from "@/services/appwrite";
@@ -40,7 +40,19 @@ export default function index() {
      error: LastViewError
   } = useFetch(getLastViewMovies)
 
+  const {
+    data: horrorMovies,
+    loading: horrorLoading,
+    error: horrorError
+  } = useFetch(()=> fetchHorrorMovies())
 
+  console.log(horrorMovies);
+  
+  const {
+    data: actionMovies,
+    loading: actionLoading,
+    error: actionError
+  } = useFetch(()=> fetchActionMovies())
 
 
   return (
@@ -60,13 +72,13 @@ export default function index() {
       >
         <Image source={icons.logo} className=" h-10 w-12 mt-20 mb-5 mx-auto" />
 {/* // todo: loading, error condition section */}
-        {moviesLoading || trendingLoading || LastViewLoading ? (
+        {moviesLoading || trendingLoading || LastViewLoading || horrorLoading ? (
           <ActivityIndicator
             size="large"
             color="white"
             className="self-center mt-10"
           />
-        ) : moviesError || trendingError || LastViewError ? (
+        ) : moviesError || trendingError || LastViewError || horrorError ? (
           <Text className="color-white">
             Error: {moviesError?.message || trendingError?.message}
           </Text>
@@ -125,13 +137,45 @@ export default function index() {
               </Text>
               <FlatList 
                 horizontal
-                className="pb-32"
+                className=""
                 data={movies}
                 renderItem={({ item }) => <MovieCard {...item} />}
                 keyExtractor={(item) => item.id.toString()}
                 ItemSeparatorComponent={()=> <View className="w-2"></View>}
               />
             </>
+{/*// todo: Horror movies */}
+            <>
+              <Text className="text-white text-lg font-bold mt-5 mb-3">
+                Horror Movies
+              </Text>
+              <FlatList 
+                horizontal
+                data={horrorMovies}
+                renderItem={({ item }) => <MovieCard {...item} />}
+                keyExtractor={(item) => item.id.toString()}
+                ItemSeparatorComponent={()=> <View className="w-2"></View>}
+                contentContainerStyle={{flexGrow: 1}}
+              />
+            </>
+
+{/*// todo: Action movies */}
+            <>
+              <Text className="text-white text-lg font-bold mt-5 mb-3">
+                Action Movies
+              </Text>
+              <FlatList 
+                horizontal
+                className="pb-32"
+                data={actionMovies}
+                renderItem={({ item }) => <MovieCard {...item} />}
+                keyExtractor={(item) => item.id.toString()}
+                ItemSeparatorComponent={()=> <View className="w-2"></View>}
+                contentContainerStyle={{flexGrow: 1}}
+              />
+            </>
+
+            
           </View>
         )}
 

@@ -71,3 +71,46 @@ export const fetchMovieDetails = async(movieId: string): Promise<MovieDetails> =
    }
 
 }
+
+
+export const fetchHorrorMovies = async(): Promise<Movie[]> => {
+   try {
+      const response = await fetch(`${TMDB_CONFIG.BASE_URL}/discover/movie?api_key=${TMDB_CONFIG.API_KEY}&with_genres=27`,{
+         method: 'GET',
+         headers: TMDB_CONFIG.headers
+      })
+
+      if(!response.ok){
+         //@ts-ignore
+         throw new Error('Faild to fetch movie deatails', response.statusText)
+      }
+      const data = await response.json();
+      return data.results;
+
+   } catch (error) {
+      console.log(error);
+      throw error;
+   }
+}
+
+
+export const fetchActionMovies = async(): Promise<Movie[]> => {
+   try {
+      const respons = await fetch(`${TMDB_CONFIG.BASE_URL}/discover/movie?api_key=${TMDB_CONFIG.API_KEY}&with_genres=28`,{
+         method: 'GET',
+         headers: TMDB_CONFIG.headers
+      })
+      
+      if(!respons.ok){
+         //@ts-ignore
+         throw new Error('Faild to fetch movie details', respons.statusText)
+      }
+
+      const data = await respons.json();
+      return data.results;
+      
+   } catch (error) {
+      console.log(error);
+      throw error;
+   }
+}
